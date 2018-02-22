@@ -1,11 +1,13 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/branch-manager
+    working_directory: ~/trello-api-ts
     docker:
       - image: circleci/node:9.5.0
     steps:
       - checkout
+      - run:
+          command: yarn config set cache-folder ~/yarn_cache
       - restore_cache:
           keys:
             - trello-api-ts-{{ checksum "yarn.lock" }}
@@ -21,7 +23,7 @@ jobs:
       - save_cache:
           key: trello-api-ts-{{ checksum "yarn.lock" }}
           paths:
-            - {{ yarn cache dir }}
+            - ~/yarn_cache
       - deploy:
           name: Publish to NPM if tagged
           working_directory: ~/trello-api-ts/build
