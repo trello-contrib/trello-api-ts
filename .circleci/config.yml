@@ -10,7 +10,7 @@ jobs:
           command: yarn config set cache-folder ~/yarn_cache
       - restore_cache:
           keys:
-            - trello-api-ts-{{ checksum "yarn.lock" }}
+            - trello-api-ts-yarn-{{ checksum "yarn.lock" }}
       - run:
           name: Install dependencies
           command: yarn
@@ -21,9 +21,21 @@ jobs:
           name: Lint
           command: yarn lint
       - save_cache:
-          key: trello-api-ts-{{ checksum "yarn.lock" }}
+          key: trello-api-ts-yarn-{{ checksum "yarn.lock" }}
           paths:
             - ~/yarn_cache
+      - save_cache:
+          key: trello-api-ts-repo-{{ .Environment.CIRCLE_SHA1 }}
+          paths: .
+
+  deploy:
+    working_directory: ~/trello-api-ts
+    docker:
+      - image: circleci/node:9.5.0
+    steps:
+      - restore_cache:
+          keys:
+            - trello-api-ts-repo-{{ .Environment.CIRCLE_SHA1 }}
       - deploy:
           name: Publish to NPM if tagged
           working_directory: ~/trello-api-ts/build
@@ -33,7 +45,25 @@ jobs:
             if [[ ${TAG} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
               yarn version --new-version "$TAG" --no-git-tag-version
               echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
-              npm publish
+              npm publish --access public
             else
               echo "Not publishing: build was not triggered by a proper release tag"
             fi
+
+workflows:
+  version: 2
+  build_maybe_deploy:
+    jobs:
+      - build:
+        # CircleCI bug forces us to filter for .* tags on all upstream job dependencies
+          filters:
+            tags:
+              only: /.*/
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+            tags:
+              only: /[0-9]+\.[0-9]+\.[0-9]+/

@@ -1,7 +1,7 @@
 {
   "name": "@trello-contrib/trello-api-ts",
   "version": "0.1.0",
-  "description": "TypeScript wrapper for the Trello API",
+  "description": "Typescript definitions for the Trello API",
   "repository": "https://github.com/trello-contrib/trello-api-ts",
   "author": "Michael Wu <michael.yixuan.wu@gmail.com>",
   "license": "MIT",
