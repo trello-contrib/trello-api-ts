@@ -1,0 +1,37 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/branch-manager
+    docker:
+      - image: circleci/node:9.5.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - trello-api-ts-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install dependencies
+          command: yarn
+      - run:
+          name: Build
+          command: yarn dist
+      - run:
+          name: Lint
+          command: yarn lint
+      - save_cache:
+          key: trello-api-ts-{{ checksum "yarn.lock" }}
+          paths:
+            - {{ yarn cache dir }}
+      - deploy:
+          name: Publish to NPM if tagged
+          working_directory: ~/trello-api-ts/build
+          command: |
+            set -euo pipefail
+            TAG=${CIRCLE_TAG:-}
+            if [[ ${TAG} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              yarn version --new-version "$TAG" --no-git-tag-version
+              echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
+              npm publish
+            else
+              echo "Not publishing: build was not triggered by a proper release tag"
+            fi

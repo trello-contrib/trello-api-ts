@@ -1,0 +1,26 @@
+{
+  "name": "trello-api-ts",
+  "version": "0.1.0",
+  "description": "TypeScript wrapper for the Trello API",
+  "repository": "https://github.com/trello-contrib/trello-api-ts",
+  "author": "Michael Wu <michael.yixuan.wu@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "clean": "npm run clean:build && npm run clean:node-modules",
+    "clean:build": "shx rm -rf build",
+    "clean:node-modules": "shx rm -rf node_modules",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "lint": "tslint 'src/**/*.ts'",
+    "copy": "npm run copy:package-json && npm run copy:readme && npm run copy:lib",
+    "copy:package-json": "shx mkdir -p build && shx cp package.json build",
+    "copy:readme": "shx mkdir -p build && shx cp README.md build",
+    "copy:lib": "shx mkdir -p build && shx mkdir -p build/lib && shx cp -R src/lib/* build/lib",
+    "dist": "npm run build && npm run copy"
+  },
+  "devDependencies": {
+    "shx": "~0.2.2",
+    "tslint": "^5.9.1",
+    "typescript": "~2.7.1"
+  }
+}

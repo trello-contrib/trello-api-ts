@@ -1,0 +1,13 @@
+# Unix-style newlines with a newline ending every file
+[*]
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+
+# 4 space indentation
+[*.{ts,js}]
+indent_size = 4
+
+# 2 space indentation
+[*.{json,yml}]
+indent_size = 2
