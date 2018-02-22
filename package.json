@@ -1,5 +1,5 @@
 {
-  "name": "trello-api-ts",
+  "name": "@trello-contrib/trello-api-ts",
   "version": "0.1.0",
   "description": "TypeScript wrapper for the Trello API",
   "repository": "https://github.com/trello-contrib/trello-api-ts",
