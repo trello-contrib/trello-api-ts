@@ -1,5 +1,7 @@
 # trello-api-ts
 
+[![CircleCI](https://circleci.com/gh/trello-contrib/trello-api-ts/tree/master.svg?style=svg)](https://circleci.com/gh/trello-contrib/trello-api-ts/tree/master)
+
 A Typescript wrapper for the JSON objects returned by the Trello API.
 
 ## Compatibility chart
